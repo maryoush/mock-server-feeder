@@ -1,0 +1,29 @@
+{
+    "when": {
+        "headerParams": {
+            "hybris-tenant": "foo",
+            "hybris-app": "bar"
+        },
+        "queryParams": {
+            "pageNumber": 1
+        },
+        "body": {
+              "given" : "value",
+              "other" : "thing"
+        }
+    },
+
+    "then": {
+        "responseHeaders": {
+            "location": "where_this_is"
+        },
+        "responseBody": {
+
+                "foo": "bar",
+                "baz": 1
+
+        },
+        "responseStatus": 201,
+        "responseDelay": 1000
+    }
+}

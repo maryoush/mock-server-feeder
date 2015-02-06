@@ -1,0 +1,66 @@
+package com.hybris.poc.dirs;
+
+import org.mockserver.client.server.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
+
+import java.util.logging.Logger;
+
+/**
+ * Created by i303813 on 05/02/15.
+ */
+public class MockServerClientRunner {
+
+
+    private static final Logger LOG = Logger.getLogger(LocalFilesystemMockFeeder.class.getName());
+
+
+    private String host = "localhost";
+    private int port = 8000;
+
+    //null object feeder
+    private MockFeeder feeder = mockServerClient -> mockServerClient;
+
+
+    public MockServerClientRunner withHost(final String ghost) {
+        host = ghost;
+        return this;
+    }
+
+
+    public MockServerClientRunner withPort(final int gport) {
+        port = gport;
+        return this;
+    }
+
+
+    public MockServerClientRunner withMockFeeder(final MockFeeder gfeeder) {
+        feeder = gfeeder;
+        return this;
+    }
+
+    public MockServerClient start(final boolean debugMode) {
+
+        LOG.info("Starting mock rest endpoint (" + (debugMode ? "debug mode" : "") + ")  at "
+                + host + " : " + port);
+
+        ClientAndServer.startClientAndServer(port);
+
+        MockServerClient mockServerClient = new MockServerClient(host, port);
+        if (debugMode) {
+            mockServerClient.dumpToLog();
+        }
+        feeder.feed(mockServerClient);
+
+        LOG.info("Started and configured mock rest endpoint (" + (debugMode ? "debug mode" : "") + ")  at "
+                + host + " : " + port);
+
+        return mockServerClient;
+    }
+
+
+    public MockServerClient start() {
+        return start(false);
+    }
+
+
+}
