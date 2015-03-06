@@ -1,4 +1,4 @@
-package com.hybris.poc.dirs;
+package com.hybris.poc.feeder;
 
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
@@ -18,25 +18,25 @@ public class MockServerClientRunner {
     private int port = 8000;
 
     //null object feeder
-    private MockFeeder feeder = mockServerClient -> mockServerClient;
-
+    private MockFeeder feeder = null;
 
     public MockServerClientRunner withHost(final String ghost) {
-        host = ghost;
+        this.host = ghost;
         return this;
     }
 
 
     public MockServerClientRunner withPort(final int gport) {
-        port = gport;
+        this.port = gport;
         return this;
     }
 
 
     public MockServerClientRunner withMockFeeder(final MockFeeder gfeeder) {
-        feeder = gfeeder;
+        this.feeder = gfeeder;
         return this;
     }
+
 
     public MockServerClient start(final boolean debugMode) {
 
@@ -49,7 +49,12 @@ public class MockServerClientRunner {
         if (debugMode) {
             mockServerClient.dumpToLog();
         }
-        feeder.feed(mockServerClient);
+
+        MockServerConfigurer caseInterceptor = new MockServerConfigurer(mockServerClient);
+
+
+        feeder.feed(caseInterceptor);
+
 
         LOG.info("Started and configured mock rest endpoint (" + (debugMode ? "debug mode" : "") + ")  at "
                 + host + " : " + port);

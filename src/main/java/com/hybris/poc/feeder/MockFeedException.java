@@ -1,4 +1,4 @@
-package com.hybris.poc.dirs;
+package com.hybris.poc.feeder;
 
 /**
  * Created by i303813 on 06/02/15.

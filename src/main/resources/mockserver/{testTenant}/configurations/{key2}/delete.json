@@ -1,0 +1,12 @@
+{
+    "when": {
+        "times" : 2
+    },
+    "then": {
+        "responseHeaders": {
+            "location": "timeout-case"
+        },
+        "responseStatus": 500,
+        "responseDelay": 2000
+    }
+}

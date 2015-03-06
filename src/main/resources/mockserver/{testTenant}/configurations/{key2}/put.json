@@ -1,0 +1,20 @@
+{
+    "when": {
+        "body": {
+            "given":"some-value"
+        }
+    },
+
+    "then": {
+        "responseHeaders": {
+            "location": "body_match"
+        },
+        "responseBody": {
+
+                "foo": "bar",
+                "baz": 1
+
+        },
+        "responseStatus": 299
+    }
+}

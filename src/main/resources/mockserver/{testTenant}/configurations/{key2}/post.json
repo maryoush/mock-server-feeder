@@ -1,0 +1,21 @@
+{
+    "when": {
+        "headerParams": {
+            "header-key": ".*"
+        },
+        "body": {
+              "key" : "value"
+        }
+    },
+
+    "then": {
+        "responseHeaders": {
+            "location": "header_with_regexp"
+        },
+        "responseBody": {
+                "foo": "bar",
+                "baz": 1
+        },
+        "responseStatus": 221
+    }
+}

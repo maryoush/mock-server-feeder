@@ -1,8 +1,8 @@
 package com.hybris.poc.jaxb;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import com.hybris.poc.jaxb.model.Case;
 import com.hybris.poc.jaxb.model.Then;
 import com.hybris.poc.jaxb.model.When;
@@ -10,13 +10,13 @@ import com.hybris.poc.jaxb.model.When;
 import java.io.IOException;
 
 /**
- * Created by i303813 on 06/02/15.
+ * Marshals any object in JSON string.
  */
-public class MapUnmarshaller {
+public class StringMarshaller{
 
     private final ObjectWriter ow;
 
-    public MapUnmarshaller() {
+    public StringMarshaller() {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -34,5 +34,4 @@ public class MapUnmarshaller {
         ow.withDefaultPrettyPrinter();
         return ow.writeValueAsString(object);
     }
-
 }

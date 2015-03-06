@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by i303813 on 06/02/15.
+ * Un-marshalls the stream into {@link com.hybris.poc.jaxb.model.Case} rooted jaxb model.
  */
-public class CaseMarshaller {
+public class CaseUnmarshaller {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public CaseMarshaller() {
+    public CaseUnmarshaller() {
 
         objectMapper.registerSubtypes(Case.class, When.class, Then.class);
 
@@ -24,9 +24,17 @@ public class CaseMarshaller {
 
         objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
+        //objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+
+
+
+//         SimpleModule testModule = new SimpleModule("StringModule", new Version(1, 0, 0, null))
+//                     .addDeserializer(Body.class, new StringMarshaller());
+//                 mapper.registerModule(testModule);
+
     }
 
-    public Case marshall(final InputStream stream) throws IOException {
+    public Case unmarshall(final InputStream stream) throws IOException {
         return objectMapper.readValue(stream, Case.class);
     }
 
