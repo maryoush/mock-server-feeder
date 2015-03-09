@@ -1,5 +1,7 @@
 package com.hybris.poc.jaxb.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hybris.poc.jaxb.StringBodySerializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
@@ -12,7 +14,7 @@ public class Then {
 
     private Map<String, String> responseHeaders;
 
-    private List<Map<String, String>> responseBody;
+    private String responseBody;
 
     private int responseStatus;
     private int responseDelay;
@@ -25,13 +27,13 @@ public class Then {
         return responseHeaders;
     }
 
-
-    public void setResponseBody(List<Map<String, String>> responseBody) {
+    @JsonDeserialize( using = StringBodySerializer.class)
+    public void setResponseBody(String responseBody) {
         this.responseBody = responseBody;
     }
 
 
-    public List<Map<String, String>> getResponseBody() {
+    public String getResponseBody() {
         return responseBody;
     }
 

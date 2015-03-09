@@ -1,0 +1,16 @@
+{
+    "when": {
+
+    },
+
+    "then": {
+        "responseHeaders": {
+            "Content-Type" : "application/json",
+            "Date" : "Fri, 01 Aug 2014 13:22:28 GMT"
+        }
+         ,
+        "responseBody": "hello_here",
+        "responseStatus": 200
+    }
+
+}

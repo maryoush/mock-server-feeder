@@ -13,12 +13,20 @@ public class MockServerClientRunner {
 
     private static final Logger LOG = Logger.getLogger(LocalFilesystemMockFeeder.class.getName());
 
+    public static MockServerClientRunner newRunner()
+    {
+        return new MockServerClientRunner();
+    }
 
     private String host = "localhost";
     private int port = 8000;
 
     //null object feeder
     private MockFeeder feeder = null;
+
+    private MockServerClientRunner(){
+        //
+    }
 
     public MockServerClientRunner withHost(final String ghost) {
         this.host = ghost;

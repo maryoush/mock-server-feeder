@@ -38,13 +38,12 @@ public class MockServerConfigurer {
 
         final HttpRequest request = getHttpRequest(path, caseAbstraction);
 
-        LOG.info("Decorating   mock for path " + path + " and method " + action.name());
+        LOG.finest("Decorating   mock for path " + path + " and method " + action.name());
 
         mockServer.when(action.withRequest(request), getTimes(caseAbstraction))
                 .respond(getHttpResponse(caseAbstraction));
 
-
-        LOG.info("Decorated  mock - " + mockServer);
+        LOG.finest("Decorated  mock - " + mockServer);
 
     }
 
@@ -53,7 +52,7 @@ public class MockServerConfigurer {
         return HttpResponse.response()
                 .withStatusCode(caseAbstraction.getThen().getResponseStatus())
                 .withHeaders(asHeaders(caseAbstraction.getThen().getResponseHeaders()))
-                .withBody(asString(caseAbstraction.getThen().getResponseBody()))
+                .withBody(caseAbstraction.getThen().getResponseBody())
                 .withDelay(new Delay(TimeUnit.MILLISECONDS, caseAbstraction.getThen().getResponseDelay()));
     }
 
@@ -78,7 +77,9 @@ public class MockServerConfigurer {
                 .withPath(relativePath);
     }
 
-
+    /**
+     * Currently supporting just single value headers ( provide a convention how to have multi value  header (maybe on input model level)
+     */
     private List<Header> asHeaders(final Map<String, String> params) {
 
         if (params == null) {
@@ -86,7 +87,7 @@ public class MockServerConfigurer {
         }
         final ImmutableList.Builder<Header> headers = ImmutableList.builder();
 
-        params.forEach((key, value) -> headers.add(new Header(key, Lists.newArrayList(Splitter.on(",").split(value)))));
+        params.forEach((key, value) -> headers.add(new Header(key, value)));
 
         return headers.build();
     }
@@ -99,7 +100,7 @@ public class MockServerConfigurer {
             return null;
         }
 
-        LOG.info("Providing body "+params);
+        LOG.info("Providing body " + params);
 
         final Body body = StringBody.json(params);
 

@@ -20,6 +20,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -37,19 +38,18 @@ public class ClientTester {
 
     private static final Client client = ClientBuilder.newClient(new RepositoryClientConfig());
 
-    private static final String ROOT_FOLDER = ClientTester.class.getClassLoader().getResource("mockserver").getPath();
+    private static final String ROOT_FOLDER = "mockserver";
 
     private MockServerClient clientMock;
 
     @Before
-    public void prepare() {
+    public void prepare() throws URISyntaxException {
 
         final MockFeeder feeder = new LocalFilesystemMockFeeder(ROOT_FOLDER);
 
-        MockServerClientRunner runner = new MockServerClientRunner();
 
-
-        clientMock = runner
+        clientMock = MockServerClientRunner
+                .newRunner()
                 .withHost("localhost")
                 .withPort(8001)
                 .withMockFeeder(feeder)
@@ -80,7 +80,7 @@ public class ClientTester {
 
 
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("[{\"foo\":\"bar\",\"baa\":\"1\"},{\"fuu\":\"bar\",\"bar\":\"1\"}]",
+        Assert.assertEquals("[{\"foo\":\"bar\",\"baa\":1},{\"fuu\":\"bar\",\"bar\":1}]",
                 response.readEntity(String.class));
     }
 
@@ -126,7 +126,7 @@ public class ClientTester {
         Assert.assertEquals(201, response.getStatus());
         Assert.assertEquals("where_this_is", response.getLocation().toString());
 
-        Assert.assertEquals("[{\"foo\":\"bar\",\"baz\":\"1\"}]", response.readEntity(String.class));
+        Assert.assertEquals("{\"foo\":\"bar\",\"baz\":1}", response.readEntity(String.class));
     }
 
 
@@ -236,6 +236,76 @@ public class ClientTester {
 
         Assert.assertEquals(404, responseForMethodHeadersAndBody(HttpMethod.POST, ImmutableMap.of("header-other", "other"), ImmutableMap.of("key", "value")).getStatus());
 
+    }
+
+    @Test
+    public void testAssureGetsWithoutHeaders() {
+
+
+        final Invocation invocation = client.target("http://localhost:8001")
+                .path("myTenant")
+                .path("email")
+                .path("data")
+                .path("templates")
+                .request()
+                .header("hybris-tenant", "myTenant")
+                .header("hybris-app", "email")
+                .header("Accept", "application/json")
+                .buildGet();
+
+        final Response resp = invocation.invoke();
+
+        Assert.assertEquals(200, resp.getStatus());
+
+    }
+
+
+
+    @Test
+    public void testAssureGetSingleWithoutHeaders() {
+
+
+        final Invocation invocation = client.target("http://localhost:8001")
+                .path("myTenant")
+                .path("email")
+                .path("data")
+                .path("templates")
+                .path("myApp.myTemplate")
+                .request()
+                .header("hybris-tenant", "myTenant")
+                .header("hybris-app", "email")
+                .header("Accept", "application/json")
+                .buildGet();
+
+        final Response resp = invocation.invoke();
+
+        Assert.assertEquals(200, resp.getStatus());
+
+        Assert.assertEquals("hello_here", resp.readEntity(String.class));
+
+    }
+
+    @Test
+    public void testAssureGetDate() {
+
+
+        final Invocation invocation = client.target("http://localhost:8001")
+                .path("myTenant")
+                .path("email")
+                .path("data")
+                .path("templates")
+                .path("myApp.myTemplate")
+                .request()
+                .header("hybris-tenant", "myTenant")
+                .header("hybris-app", "email")
+                .header("Accept", "application/json")
+                .buildGet();
+
+        final Response resp = invocation.invoke();
+
+        Assert.assertEquals(200, resp.getStatus());
+
+        Assert.assertEquals("Fri Aug 01 15:22:28 CEST 2014", resp.getDate().toString());
 
     }
 
@@ -264,38 +334,6 @@ public class ClientTester {
 
     }
 
-
-    /**
-     * Body should match criteria :
-     * <p/>
-     * {@code
-     * <p/>
-     * ".*" : "someValue"
-     * <p/>
-     * }
-     *
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    @Test
-    public void assureBodyShouldHaveAnyKeyWithSomeValue() throws ExecutionException, InterruptedException {
-
-//        Map simpleBody = new SimpleBody();
-//        simpleBody.setOther("thing");
-//
-//        final Invocation invocation = client.target("http://localhost:8001")
-//                .path("testTenant")
-//                .path("configurations")
-//                .path("key2")
-//                .request()
-//                .buildPut(Entity.entity(simpleBody, MediaType.APPLICATION_JSON_TYPE));
-//
-//
-//        Response response = invocation.invoke();
-//        Assert.assertEquals(201, response.getStatus());
-
-
-    }
 
     private static class RepositoryClientConfig extends ClientConfig {
         /**

@@ -2,10 +2,11 @@ package com.hybris.poc.feeder;
 
 import com.hybris.poc.jaxb.CaseUnmarshaller;
 import com.hybris.poc.jaxb.model.Case;
-import org.mockserver.client.server.MockServerClient;
 import org.mockserver.model.HttpRequest;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.logging.Logger;
@@ -35,7 +36,7 @@ public class LocalFilesystemMockFeeder implements MockFeeder {
     private final CaseUnmarshaller marshaller = new CaseUnmarshaller();
 
 
-    private final String rootFolder;
+    private final URI rootFolder;
 
 
     private ACTION asAllowedFile(final Path file) {
@@ -53,8 +54,13 @@ public class LocalFilesystemMockFeeder implements MockFeeder {
     }
 
 
-    public LocalFilesystemMockFeeder(final String root) {
+    public LocalFilesystemMockFeeder(final URI root) {
         this.rootFolder = root;
+    }
+
+
+    public LocalFilesystemMockFeeder(final String rootFolder) throws URISyntaxException {
+        this(LocalFilesystemMockFeeder.class.getClassLoader().getResource(rootFolder).toURI());
     }
 
 
@@ -77,21 +83,18 @@ public class LocalFilesystemMockFeeder implements MockFeeder {
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
 
-
                     final ACTION action = asAllowedFile(file);
-
 
 
                     if (action != null) {
 
-                        LOG.info("relative for action "+action+" , " + (root.relativize(file)));
+                        LOG.info("relative for action " + action + " , " + (root.relativize(file)));
 
                         final Case caseAbstraction = marshaller.unmarshall(Files.newInputStream(file));
 
                         final Path path = root.relativize(file.getParent());
 
                         caseInterceptor.onCase(path, action, caseAbstraction);
-
 
 
                         if (file.getFileName().toString().contains("{") &&

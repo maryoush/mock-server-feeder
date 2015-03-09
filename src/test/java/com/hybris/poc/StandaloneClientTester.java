@@ -9,7 +9,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Before;
 import org.mockserver.client.server.MockServerClient;
 
-import java.io.Console;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 /**
@@ -19,40 +19,24 @@ public class StandaloneClientTester {
 
     private static final Logger LOG = Logger.getLogger(StandaloneClientTester.class.getName());
 
-    // private static final Client client = ClientBuilder.newClient(new RepositoryClientConfig());
 
-    private static final String ROOT_FOLDER = StandaloneClientTester.class.getClassLoader().getResource("mockserver").getPath();
+    private static final String ROOT_FOLDER = "mockserver";
 
 
     @Before
-    public static void main(final String[] args) throws InterruptedException {
+    public static void main(final String[] args) throws InterruptedException, URISyntaxException {
 
         final MockFeeder feeder = new LocalFilesystemMockFeeder(ROOT_FOLDER);
 
-        MockServerClientRunner runner = new MockServerClientRunner();
 
-
-        MockServerClient clientMock = runner
+        MockServerClientRunner.newRunner()
                 .withHost("localhost")
                 .withPort(8001)
                 .withMockFeeder(feeder)
                 .start(true);
 
-
-       // Thread.sleep(1000 * 10);
-
     }
 
-
-    private static class RepositoryClientConfig extends ClientConfig {
-        /**
-         * Configures the client for repository service access.
-         */
-        public RepositoryClientConfig() {
-            register(JacksonFeature.class);
-            register(new LoggingFilter(Logger.getLogger(RepositoryClientConfig.class.getName() + ".jersey"), false));
-        }
-    }
 
 
 }

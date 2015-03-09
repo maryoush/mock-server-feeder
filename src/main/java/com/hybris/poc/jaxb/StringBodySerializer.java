@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 import java.io.IOException;
 
@@ -33,6 +34,10 @@ public class StringBodySerializer extends JsonDeserializer<String> {
         final ObjectMapper objectMapper = (ObjectMapper)jsonParser.getCodec();
 
         final TreeNode node = objectMapper.readTree(jsonParser);
+        if( node instanceof TextNode)
+        {
+            return ((TextNode)node).asText();
+        }
         return objectMapper.writeValueAsString(node);
 
     }

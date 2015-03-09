@@ -1,0 +1,57 @@
+{
+    "when": {
+
+    },
+
+    "then": {
+        "responseHeaders": {
+            "Content-Type" : "application/json"
+        }
+         ,
+        "responseBody": [
+            {
+                "id":"myApp.myTemplate",
+                "code":"myTemplate",
+                "owner":"myApp",
+                "description":"testdescription",
+                "name":"testname",
+                "definableAttributes":{},
+                "metadata":{
+                    "modifiedAt": "2014-07-30T08:54:35.000+0000"
+                },
+                "files":[
+                    { "_id": "53bbde25ba8e2b25693f332d",
+                        "repositoryUrl": "http://localhost:9999/myTenant/email/media/53bbde25ba8e2b25693f332d",
+                        "sizeInBytes": 669,
+                        "_lastModified": 1404821029176,
+                        "type": "body",
+                        "locale": "de"
+                    }
+                ]
+            }
+            ,
+            {
+                "id":"myApp.templateAnother",
+                "code":"templateAnother",
+                "owner":"myApp",
+                "description":"testdescription",
+                "name":"testname",
+                "definableAttributes":{},
+                "metadata":{
+                    "modifiedAt": "2014-07-30T08:54:35.000+0000"
+                },
+                "files":[
+                    { "_id": "53bbde25ba8e2b25693f332d",
+                        "repositoryUrl": "http://localhost:9999/myTenant/email/media/53bbde25ba8e2b25693f332d",
+                        "sizeInBytes": 669,
+                        "_lastModified": 1404821029176,
+                        "type": "body",
+                        "locale": "de"
+                    }
+                ]
+            }
+        ],
+        "responseStatus": 200
+    }
+
+}

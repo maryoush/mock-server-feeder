@@ -1,0 +1,17 @@
+{
+    "when": {
+
+    },
+
+    "then": {
+        "responseHeaders": {
+            "Content-Type" : "application/json"
+        }
+         ,
+        "responseBody": [
+            "bodyContent"
+        ],
+        "responseStatus": 200
+    }
+
+}
